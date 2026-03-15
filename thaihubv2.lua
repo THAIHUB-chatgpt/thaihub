@@ -307,19 +307,27 @@ RS.Heartbeat:Connect(function()
         LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
     end
 end)
--- SILENT ASSASSINS TOGGLE (THÁI HUB V2)
+-- SILENT ASSASSINS
 
 local saOn = false
-local LP = game.Players.LocalPlayer
-local RS = game:GetService("RunService")
 
-click("Silent Assassins", 220, 320)
+click("Silent Assassins OFF",220,320)
 
 mouse.Button1Down:Connect(function()
     if mouse.X >= 220 and mouse.X <= 380 and mouse.Y >= 320 and mouse.Y <= 360 then
+        
         saOn = not saOn
+        
+        if saOn then
+            click("Silent Assassins ON",220,320)
+        else
+            click("Silent Assassins OFF",220,320)
+        end
     end
 end)
+
+local LP = game.Players.LocalPlayer
+local RS = game:GetService("RunService")
 
 RS.Heartbeat:Connect(function()
     if saOn and LP.Character and LP.Character:FindFirstChild("Humanoid") then
@@ -339,12 +347,6 @@ RS.RenderStepped:Connect(function()
                 hrp.Size = Vector3.new(100,100,100)
                 hrp.Transparency = 0.9
                 hrp.CanCollide = false
-
-                if not v.Character:FindFirstChild("Highlight") then
-                    local hl = Instance.new("Highlight", v.Character)
-                    hl.FillColor = Color3.new(1,0,0)
-                    hl.FillTransparency = 0.5
-                end
             end
         end
     end
