@@ -296,41 +296,6 @@ player.Idled:Connect(function()
     game:GetService("VirtualUser"):ClickButton2(Vector2.new())
 end)
 
--- Silent Assassins Auto Script
-
-local LP, RS = game.Players.LocalPlayer, game:GetService("RunService")
-
--- SEMI-GOD & NO SLOW & SPEED 20
-RS.Heartbeat:Connect(function()
-    if LP.Character and LP.Character:FindFirstChild("Humanoid") then
-        LP.Character.Humanoid.WalkSpeed = 20
-        LP.Character.Humanoid.PlatformStand = false
-        if LP.Character:FindFirstChild("HumanoidRootPart") then
-            LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
-        end
-    end
-end)
-
-RS.RenderStepped:Connect(function()
-    for _, v in pairs(game.Players:GetPlayers()) do
-        if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-            local hrp = v.Character.HumanoidRootPart
-
-            -- HITBOX
-            hrp.Size = Vector3.new(100,100,100)
-            hrp.Transparency = 0.9
-            hrp.CanCollide = false
-
-            -- ESP
-            if not v.Character:FindFirstChild("Highlight") then
-                local hl = Instance.new("Highlight")
-                hl.Parent = v.Character
-                hl.FillColor = Color3.new(1,0,0)
-                hl.FillTransparency = 0.5
-            end
-        end
-    end
-end)
 
 -- ULTRA FIX LAG (THÁI HUB)
 
@@ -384,3 +349,44 @@ task.spawn(function()
     end
 end)
 
+-- Silent Assassins Auto Script (Game Detect)
+
+local allowedPlaceId = 1234567890 -- thay bằng PlaceId game Silent Assassins
+
+if game.PlaceId ~= allowedPlaceId then
+    return
+end
+
+local LP, RS = game.Players.LocalPlayer, game:GetService("RunService")
+
+-- SEMI-GOD & NO SLOW & SPEED 20
+RS.Heartbeat:Connect(function()
+    if LP.Character and LP.Character:FindFirstChild("Humanoid") then
+        LP.Character.Humanoid.WalkSpeed = 20
+        LP.Character.Humanoid.PlatformStand = false
+        if LP.Character:FindFirstChild("HumanoidRootPart") then
+            LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+        end
+    end
+end)
+
+RS.RenderStepped:Connect(function()
+    for _, v in pairs(game.Players:GetPlayers()) do
+        if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+            local hrp = v.Character.HumanoidRootPart
+
+            -- HITBOX
+            hrp.Size = Vector3.new(100,100,100)
+            hrp.Transparency = 0.9
+            hrp.CanCollide = false
+
+            -- ESP
+            if not v.Character:FindFirstChild("Highlight") then
+                local hl = Instance.new("Highlight")
+                hl.Parent = v.Character
+                hl.FillColor = Color3.new(1,0,0)
+                hl.FillTransparency = 0.5
+            end
+        end
+    end
+end)
