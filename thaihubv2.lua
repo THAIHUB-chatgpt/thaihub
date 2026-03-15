@@ -349,32 +349,3 @@ task.spawn(function()
     end
 end)
 
--- Silent Assassins Button
-
-local sa = Instance.new("TextButton")
-sa.Parent = main
-sa.Size = UDim2.new(0,180,0,40)
-sa.Position = UDim2.new(0,20,0,300) -- nằm dưới InfiniteYield
-sa.BackgroundColor3 = Color3.fromRGB(0,0,0)
-sa.BorderSizePixel = 1
-sa.Text = "Silent Assassins"
-sa.TextColor3 = Color3.fromRGB(255,255,255)
-sa.TextSize = 18
-
-sa.MouseButton1Click:Connect(function()
-
-    if game.GameId ~= 2294168059 then return end
-
-    local LP = game.Players.LocalPlayer
-    local RS = game:GetService("RunService")
-
-    RS.Heartbeat:Connect(function()
-        if LP.Character and LP.Character:FindFirstChild("Humanoid") then
-            LP.Character.Humanoid.WalkSpeed = 20
-            LP.Character.Humanoid.PlatformStand = false
-            LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
-        end
-    end)
-
-end)
-
