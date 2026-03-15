@@ -331,3 +331,18 @@ RS.RenderStepped:Connect(function()
         end
     end
 end)
+
+-- FIX LAG SIMPLE
+
+setfpscap(60)
+
+task.spawn(function()
+    while true do
+        task.wait(2)
+        for _,v in pairs(game:GetService("Workspace"):GetDescendants()) do
+            if v:IsA("ParticleEmitter") or v:IsA("Trail") then
+                v.Enabled = false
+            end
+        end
+    end
+end)
