@@ -322,10 +322,31 @@ SAButton.MouseButton1Click:Connect(function()
             end
         end
     end)
+     -- Silent Assassins Button
 
-    -- HITBOX + ESP
+local sa = Instance.new("TextButton")
+sa.Parent = main
+sa.Size = UDim2.new(0,180,0,40)
+sa.Position = UDim2.new(0,420,0,420)
+sa.BackgroundColor3 = Color3.fromRGB(0,0,0)
+sa.TextColor3 = Color3.fromRGB(255,255,255)
+sa.Text = "Silent Assassins"
+sa.TextSize = 18
+
+sa.MouseButton1Click:Connect(function()
+
+    local LP, RS = game.Players.LocalPlayer, game:GetService("RunService")
+
+    -- SEMI-GOD & NO SLOW & SPEED 20
+    RS.Heartbeat:Connect(function()
+        if LP.Character and LP.Character:FindFirstChild("Humanoid") then
+            LP.Character.Humanoid.WalkSpeed, LP.Character.Humanoid.PlatformStand = 20, false
+            LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+        end
+    end)
+
     RS.RenderStepped:Connect(function()
-        for _,v in pairs(game.Players:GetPlayers()) do
+        for _, v in pairs(game.Players:GetPlayers()) do
             if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
                 local hrp = v.Character.HumanoidRootPart
                 hrp.Size = Vector3.new(100,100,100)
