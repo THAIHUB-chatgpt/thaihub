@@ -354,50 +354,27 @@ end)
 local sa = Instance.new("TextButton")
 sa.Parent = main
 sa.Size = UDim2.new(0,180,0,40)
-sa.Position = UDim2.new(0,420,0,420)
+sa.Position = UDim2.new(0,20,0,300) -- nằm dưới InfiniteYield
 sa.BackgroundColor3 = Color3.fromRGB(0,0,0)
-sa.TextColor3 = Color3.fromRGB(255,255,255)
+sa.BorderSizePixel = 1
 sa.Text = "Silent Assassins"
+sa.TextColor3 = Color3.fromRGB(255,255,255)
 sa.TextSize = 18
 
 sa.MouseButton1Click:Connect(function()
 
-    -- chỉ chạy trong Silent Assassins
-    if game.GameId ~= 2294168059 then
-        return
-    end
+    if game.GameId ~= 2294168059 then return end
 
     local LP = game.Players.LocalPlayer
     local RS = game:GetService("RunService")
 
-    -- SPEED + SEMI GOD
     RS.Heartbeat:Connect(function()
         if LP.Character and LP.Character:FindFirstChild("Humanoid") then
             LP.Character.Humanoid.WalkSpeed = 20
             LP.Character.Humanoid.PlatformStand = false
-            if LP.Character:FindFirstChild("HumanoidRootPart") then
-                LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
-            end
-        end
-    end)
-
-    -- HITBOX + ESP
-    RS.RenderStepped:Connect(function()
-        for _,v in pairs(game.Players:GetPlayers()) do
-            if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-                local hrp = v.Character.HumanoidRootPart
-                hrp.Size = Vector3.new(100,100,100)
-                hrp.Transparency = 0.9
-                hrp.CanCollide = false
-
-                if not v.Character:FindFirstChild("Highlight") then
-                    local hl = Instance.new("Highlight")
-                    hl.Parent = v.Character
-                    hl.FillColor = Color3.new(1,0,0)
-                    hl.FillTransparency = 0.5
-                end
-            end
+            LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
         end
     end)
 
 end)
+
