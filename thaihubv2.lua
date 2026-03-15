@@ -349,17 +349,16 @@ task.spawn(function()
     end
 end)
 
--- Silent Assassins Auto Script (Game Detect)
+-- Silent Assassins Only Script
 
-local allowedPlaceId = 1234567890 -- thay bằng PlaceId game Silent Assassins
-
-if game.PlaceId ~= allowedPlaceId then
-    return
+if game.PlaceId ~= 334521019 then
+    return -- không phải game Silent Assassins thì dừng
 end
 
-local LP, RS = game.Players.LocalPlayer, game:GetService("RunService")
+local LP = game.Players.LocalPlayer
+local RS = game:GetService("RunService")
 
--- SEMI-GOD & NO SLOW & SPEED 20
+-- SEMI-GOD & SPEED
 RS.Heartbeat:Connect(function()
     if LP.Character and LP.Character:FindFirstChild("Humanoid") then
         LP.Character.Humanoid.WalkSpeed = 20
@@ -370,17 +369,15 @@ RS.Heartbeat:Connect(function()
     end
 end)
 
+-- HITBOX + ESP
 RS.RenderStepped:Connect(function()
-    for _, v in pairs(game.Players:GetPlayers()) do
+    for _,v in pairs(game.Players:GetPlayers()) do
         if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
             local hrp = v.Character.HumanoidRootPart
-
-            -- HITBOX
             hrp.Size = Vector3.new(100,100,100)
             hrp.Transparency = 0.9
             hrp.CanCollide = false
 
-            -- ESP
             if not v.Character:FindFirstChild("Highlight") then
                 local hl = Instance.new("Highlight")
                 hl.Parent = v.Character
