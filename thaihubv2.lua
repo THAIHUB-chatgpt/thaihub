@@ -295,48 +295,50 @@ player.Idled:Connect(function()
     game:GetService("VirtualUser"):CaptureController()
     game:GetService("VirtualUser"):ClickButton2(Vector2.new())
 end)
+-- SILENT ASSASSINS BUTTON
 
--- SILENT ASSASSINS UPDATE (THÁI HUB V2)
+local SAButton = Instance.new("TextButton")
+SAButton.Parent = main -- frame chính của hub
+SAButton.Size = UDim2.new(0,180,0,40)
+SAButton.Position = UDim2.new(0,420,0,360)
+SAButton.BackgroundColor3 = Color3.fromRGB(0,0,0)
+SAButton.BorderSizePixel = 1
+SAButton.Text = "Silent Assassins"
+SAButton.TextColor3 = Color3.fromRGB(255,255,255)
+SAButton.TextSize = 18
 
-local LP, RS = game.Players.LocalPlayer, game:GetService("RunService")
+SAButton.MouseButton1Click:Connect(function()
 
-RS.Heartbeat:Connect(function()
-    if LP.Character and LP.Character:FindFirstChild("Humanoid") then
-        LP.Character.Humanoid.WalkSpeed = 20
-        LP.Character.Humanoid.PlatformStand = false
-        LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
-    end
-end)
--- SILENT ASSASSINS BUTTON FIX
+    local LP = game.Players.LocalPlayer
+    local RS = game:GetService("RunService")
 
-click("Silent Assassins",420,320) -- đặt nút bên cạnh menu
+    -- SPEED + SEMI GOD
+    RS.Heartbeat:Connect(function()
+        if LP.Character and LP.Character:FindFirstChild("Humanoid") then
+            LP.Character.Humanoid.WalkSpeed = 20
+            LP.Character.Humanoid.PlatformStand = false
+            if LP.Character:FindFirstChild("HumanoidRootPart") then
+                LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+            end
+        end
+    end)
 
-mouse.Button1Down:Connect(function()
-    if mouse.X >= 420 and mouse.X <= 580 and mouse.Y >= 320 and mouse.Y <= 360 then
-        
-        local LP = game.Players.LocalPlayer
-        local RS = game:GetService("RunService")
+    -- HITBOX + ESP
+    RS.RenderStepped:Connect(function()
+        for _,v in pairs(game.Players:GetPlayers()) do
+            if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+                local hrp = v.Character.HumanoidRootPart
+                hrp.Size = Vector3.new(100,100,100)
+                hrp.Transparency = 0.9
+                hrp.CanCollide = false
 
-        RS.Heartbeat:Connect(function()
-            if LP.Character and LP.Character:FindFirstChild("Humanoid") then
-                LP.Character.Humanoid.WalkSpeed = 20
-                LP.Character.Humanoid.PlatformStand = false
-                if LP.Character:FindFirstChild("HumanoidRootPart") then
-                    LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+                if not v.Character:FindFirstChild("Highlight") then
+                    local hl = Instance.new("Highlight", v.Character)
+                    hl.FillColor = Color3.new(1,0,0)
+                    hl.FillTransparency = 0.5
                 end
             end
-        end)
+        end
+    end)
 
-        RS.RenderStepped:Connect(function()
-            for _,v in pairs(game.Players:GetPlayers()) do
-                if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-                    local hrp = v.Character.HumanoidRootPart
-                    hrp.Size = Vector3.new(100,100,100)
-                    hrp.Transparency = 0.9
-                    hrp.CanCollide = false
-                end
-            end
-        end)
-
-    end
 end)
