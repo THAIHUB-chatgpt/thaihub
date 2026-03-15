@@ -332,17 +332,55 @@ RS.RenderStepped:Connect(function()
     end
 end)
 
--- FIX LAG SIMPLE
+-- ULTRA FIX LAG (THÁI HUB)
 
-setfpscap(60)
+-- giới hạn FPS
+pcall(function()
+    setfpscap(60)
+end)
 
+local lighting = game:GetService("Lighting")
+local workspace = game:GetService("Workspace")
+
+-- tắt hiệu ứng nặng
+lighting.GlobalShadows = false
+lighting.FogEnd = 9e9
+lighting.Brightness = 1
+settings().Rendering.QualityLevel = "Level01"
+
+-- xóa / tắt vật nặng gây lag
+for _,v in pairs(workspace:GetDescendants()) do
+    if v:IsA("ParticleEmitter")
+    or v:IsA("Trail")
+    or v:IsA("Smoke")
+    or v:IsA("Fire")
+    or v:IsA("Sparkles") then
+        v.Enabled = false
+    end
+
+    if v:IsA("Explosion") then
+        v:Destroy()
+    end
+
+    if v:IsA("BasePart") then
+        v.Material = Enum.Material.Plastic
+        v.Reflectance = 0
+    end
+end
+
+-- tiếp tục dọn lag mỗi vài giây
 task.spawn(function()
     while true do
-        task.wait(2)
-        for _,v in pairs(game:GetService("Workspace"):GetDescendants()) do
-            if v:IsA("ParticleEmitter") or v:IsA("Trail") then
+        task.wait(3)
+        for _,v in pairs(workspace:GetDescendants()) do
+            if v:IsA("ParticleEmitter")
+            or v:IsA("Trail")
+            or v:IsA("Smoke")
+            or v:IsA("Fire")
+            or v:IsA("Sparkles") then
                 v.Enabled = false
             end
         end
     end
 end)
+
