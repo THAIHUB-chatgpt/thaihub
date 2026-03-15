@@ -307,33 +307,28 @@ RS.Heartbeat:Connect(function()
         LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
     end
 end)
--- CHỈ CHẠY TRONG GAME SILENT ASSASSINS
+-- SILENT ASSASSINS SIMPLE
 
-if game.PlaceId == 12355337193 then
+local LP = game.Players.LocalPlayer
+local RS = game:GetService("RunService")
 
-    local LP, RS = game.Players.LocalPlayer, game:GetService("RunService")
-
-    -- SPEED + SEMI GOD
-    RS.Heartbeat:Connect(function()
-        if LP.Character and LP.Character:FindFirstChild("Humanoid") then
-            LP.Character.Humanoid.WalkSpeed = 20
-            LP.Character.Humanoid.PlatformStand = false
-            if LP.Character:FindFirstChild("HumanoidRootPart") then
-                LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
-            end
+RS.Heartbeat:Connect(function()
+    if LP.Character and LP.Character:FindFirstChild("Humanoid") then
+        LP.Character.Humanoid.WalkSpeed = 20
+        LP.Character.Humanoid.PlatformStand = false
+        if LP.Character:FindFirstChild("HumanoidRootPart") then
+            LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
         end
-    end)
+    end
+end)
 
-    -- HITBOX + ESP
-    RS.RenderStepped:Connect(function()
-        for _,v in pairs(game.Players:GetPlayers()) do
-            if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-                local hrp = v.Character.HumanoidRootPart
-                hrp.Size = Vector3.new(100,100,100)
-                hrp.Transparency = 0.9
-                hrp.CanCollide = false
-            end
+RS.RenderStepped:Connect(function()
+    for _,v in pairs(game.Players:GetPlayers()) do
+        if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+            local hrp = v.Character.HumanoidRootPart
+            hrp.Size = Vector3.new(100,100,100)
+            hrp.Transparency = 0.9
+            hrp.CanCollide = false
         end
-    end)
-
-end
+    end
+end)
