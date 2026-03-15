@@ -307,40 +307,25 @@ RS.Heartbeat:Connect(function()
         LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
     end
 end)
--- SILENT ASSASSINS
+-- CHỈ CHẠY TRONG GAME SILENT ASSASSINS
 
-local saOn = false
+if game.PlaceId == 12355337193 then
 
-click("Silent Assassins OFF",220,320)
+    local LP, RS = game.Players.LocalPlayer, game:GetService("RunService")
 
-mouse.Button1Down:Connect(function()
-    if mouse.X >= 220 and mouse.X <= 380 and mouse.Y >= 320 and mouse.Y <= 360 then
-        
-        saOn = not saOn
-        
-        if saOn then
-            click("Silent Assassins ON",220,320)
-        else
-            click("Silent Assassins OFF",220,320)
+    -- SPEED + SEMI GOD
+    RS.Heartbeat:Connect(function()
+        if LP.Character and LP.Character:FindFirstChild("Humanoid") then
+            LP.Character.Humanoid.WalkSpeed = 20
+            LP.Character.Humanoid.PlatformStand = false
+            if LP.Character:FindFirstChild("HumanoidRootPart") then
+                LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+            end
         end
-    end
-end)
+    end)
 
-local LP = game.Players.LocalPlayer
-local RS = game:GetService("RunService")
-
-RS.Heartbeat:Connect(function()
-    if saOn and LP.Character and LP.Character:FindFirstChild("Humanoid") then
-        LP.Character.Humanoid.WalkSpeed = 20
-        LP.Character.Humanoid.PlatformStand = false
-        if LP.Character:FindFirstChild("HumanoidRootPart") then
-            LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
-        end
-    end
-end)
-
-RS.RenderStepped:Connect(function()
-    if saOn then
+    -- HITBOX + ESP
+    RS.RenderStepped:Connect(function()
         for _,v in pairs(game.Players:GetPlayers()) do
             if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
                 local hrp = v.Character.HumanoidRootPart
@@ -349,5 +334,6 @@ RS.RenderStepped:Connect(function()
                 hrp.CanCollide = false
             end
         end
-    end
-end)
+    end)
+
+end
