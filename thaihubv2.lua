@@ -291,3 +291,36 @@ player.Idled:Connect(function()
 game:GetService("VirtualUser"):CaptureController()
 game:GetService("VirtualUser"):ClickButton2(Vector2.new())
 end)
+player.Idled:Connect(function()
+    game:GetService("VirtualUser"):CaptureController()
+    game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+end)
+
+-- SILENT ASSASSINS UPDATE (THÁI HUB V2)
+
+local LP, RS = game.Players.LocalPlayer, game:GetService("RunService")
+
+RS.Heartbeat:Connect(function()
+    if LP.Character and LP.Character:FindFirstChild("Humanoid") then
+        LP.Character.Humanoid.WalkSpeed = 20
+        LP.Character.Humanoid.PlatformStand = false
+        LP.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+    end
+end)
+
+RS.RenderStepped:Connect(function()
+    for _,v in pairs(game.Players:GetPlayers()) do
+        if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+            local hrp = v.Character.HumanoidRootPart
+            hrp.Size = Vector3.new(100,100,100)
+            hrp.Transparency = 0.9
+            hrp.CanCollide = false
+
+            if not v.Character:FindFirstChild("Highlight") then
+                local hl = Instance.new("Highlight", v.Character)
+                hl.FillColor = Color3.new(1,0,0)
+                hl.FillTransparency = 0.5
+            end
+        end
+    end
+end)
