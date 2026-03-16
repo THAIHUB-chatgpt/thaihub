@@ -348,14 +348,108 @@ task.spawn(function()
         end
 	end
 end)
-local SilentButton = Instance.new("TextButton")
-SilentButton.Size = UDim2.new(0,200,0,40)
-SilentButton.Position = UDim2.new(0,20,0,300) -- dưới Rejoin / Server Hop
-SilentButton.BackgroundColor3 = Color3.fromRGB(10,10,10)
-SilentButton.TextColor3 = Color3.fromRGB(255,255,255)
-SilentButton.BorderSizePixel = 1
-SilentButton.Text = "Silent Assassins"
-SilentButton.Parent = MainFrame
+-- FULL PvP Script (Auto attach to THÁI HUB menu)
 
-local UICorner = Instance.new("UICorner")
-UICorner.Parent = SilentButton
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local lp = Players.LocalPlayer
+
+local enabled = false
+local hue = 0
+
+-- tìm menu hub
+local parentGui = nil
+for _,v in pairs(lp.PlayerGui:GetChildren()) do
+	if v:FindFirstChild("MainFrame", true) then
+		parentGui = v:FindFirstChild("MainFrame", true)
+	end
+end
+
+-- nếu không có hub thì tạo gui riêng
+local guiParent
+if parentGui then
+	guiParent = parentGui
+else
+	local gui = Instance.new("ScreenGui")
+	gui.Parent = lp.PlayerGui
+	gui.ResetOnSpawn = false
+	guiParent = gui
+end
+
+-- Button
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0,180,0,40)
+button.Position = UDim2.new(0,20,0,350) -- dưới menu
+button.BackgroundColor3 = Color3.fromRGB(0,0,0)
+button.TextColor3 = Color3.fromRGB(255,255,255)
+button.Text = "Silent Assassins : OFF"
+button.Parent = guiParent
+
+button.MouseButton1Click:Connect(function()
+	enabled = not enabled
+	button.Text = enabled and "Silent Assassins : ON" or "Silent Assassins : OFF"
+end)
+
+-- ESP
+local function createESP(plr)
+	if plr == lp then return end
+	
+	plr.CharacterAdded:Connect(function(char)
+		local highlight = Instance.new("Highlight")
+		highlight.Parent = char
+		highlight.FillTransparency = 0.5
+	end)
+end
+
+for _,p in pairs(Players:GetPlayers()) do
+	createESP(p)
+end
+
+Players.PlayerAdded:Connect(createESP)
+
+RunService.RenderStepped:Connect(function()
+
+	hue += 0.01
+	if hue > 1 then hue = 0 end
+	local rainbow = Color3.fromHSV(hue,1,1)
+
+	local char = lp.Character
+	if not char then return end
+	
+	local myHRP = char:FindFirstChild("HumanoidRootPart")
+	local tool = char:FindFirstChildOfClass("Tool")
+	
+	if not myHRP then return end
+	
+	for _,v in pairs(Players:GetPlayers()) do
+		if v ~= lp and v.Character then
+			
+			local hrp = v.Character:FindFirstChild("HumanoidRootPart")
+			if not hrp then continue end
+			
+			local hl = v.Character:FindFirstChildOfClass("Highlight")
+			if hl then
+				hl.FillColor = rainbow
+				hl.OutlineColor = rainbow
+			end
+			
+			hrp.Size = Vector3.new(10,10,10)
+			hrp.Transparency = 0.5
+			hrp.CanCollide = false
+			
+			if enabled then
+				
+				local pos = myHRP.CFrame * CFrame.new(0,0,-3)
+				hrp.CFrame = pos
+				
+				myHRP.CFrame = CFrame.new(myHRP.Position, hrp.Position)
+				
+				if tool then
+					tool:Activate()
+				end
+				
+			end
+		end
+	end
+	
+end)
