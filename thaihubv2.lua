@@ -1,4 +1,4 @@
--- THÁI HUB V2 MARKET FINAL
+-- THÁI HUB V2 MARKET FINAL + SILENT ASSASSINS
 
 repeat task.wait() until game:IsLoaded()
 
@@ -46,28 +46,6 @@ end
 end)
 
 repeat task.wait() until unlocked
-
-------------------------------------------------
--- LOAD SCREEN
-------------------------------------------------
-
-local loadGui = Instance.new("ScreenGui", game.CoreGui)
-
-local loadFrame = Instance.new("Frame", loadGui)
-loadFrame.Size = UDim2.new(0,300,0,120)
-loadFrame.Position = UDim2.new(0.5,-150,0.5,-60)
-loadFrame.BackgroundColor3 = Color3.fromRGB(0,0,0)
-
-local loadText = Instance.new("TextLabel", loadFrame)
-loadText.Size = UDim2.new(1,0,1,0)
-loadText.BackgroundTransparency = 1
-loadText.TextColor3 = Color3.new(1,1,1)
-loadText.TextScaled = true
-loadText.Text = "THÁI HUB LOADING..."
-
-task.wait(math.random(5,10))
-
-loadGui:Destroy()
 
 ------------------------------------------------
 -- SERVICES
@@ -126,6 +104,9 @@ local speedOn=false
 local jumpOn=false
 local noclipOn=false
 local infiniteJump=false
+local silentOn=false
+local espOn=false
+local hue=0
 
 RunService.RenderStepped:Connect(function()
 
@@ -182,7 +163,6 @@ b.Text=text.." OFF"
 b.MouseButton1Click:Connect(function()
 
 state=not state
-
 b.Text=text.." "..(state and "ON" or "OFF")
 b.BackgroundColor3=state and Color3.fromRGB(0,200,0) or Color3.fromRGB(0,0,0)
 
@@ -190,16 +170,8 @@ if text=="Speed" then speedOn=state end
 if text=="Jump" then jumpOn=state end
 if text=="Noclip" then noclipOn=state end
 if text=="InfiniteJump" then infiniteJump=state end
-
-if text=="ESP" and state then
-for _,v in pairs(Players:GetPlayers()) do
-if v~=player and v.Character then
-local h=Instance.new("Highlight",v.Character)
-h.FillTransparency=1
-h.OutlineColor=Color3.fromRGB(255,0,0)
-end
-end
-end
+if text=="SilentAssassins" then silentOn=state end
+if text=="ESP" then espOn=state end
 
 end)
 
@@ -254,97 +226,76 @@ end
 ------------------------------------------------
 
 toggle("Speed",10,50)
-toggle("Jump",10,90)
-toggle("Noclip",10,130)
-toggle("InfiniteJump",10,170)
-click("InfiniteYield",10,210)
-
 click("FullBright",210,50)
+
+toggle("Jump",10,90)
 toggle("ESP",210,90)
+
+toggle("Noclip",10,130)
 click("Fly",210,130)
+
+toggle("InfiniteJump",10,170)
 click("Bacon Hub",210,170)
+
+click("InfiniteYield",10,210)
+toggle("SilentAssassins",210,210)
 
 click("Rejoin",80,285)
 click("Server Hop",220,285)
 
 ------------------------------------------------
--- NOCLIP
+-- SILENT ASSASSINS
 ------------------------------------------------
 
-RunService.Stepped:Connect(function()
+RunService.RenderStepped:Connect(function()
 
-if noclipOn and player.Character then
-for _,v in pairs(player.Character:GetDescendants()) do
-if v:IsA("BasePart") then
-v.CanCollide=false
+if not silentOn then return end
+
+local char = player.Character
+if not char then return end
+
+local myHRP = char:FindFirstChild("HumanoidRootPart")
+local tool = char:FindFirstChildOfClass("Tool")
+
+if not myHRP then return end
+
+hue += 0.01
+if hue > 1 then hue = 0 end
+
+local rainbow = Color3.fromHSV(hue,1,1)
+
+for _,v in pairs(Players:GetPlayers()) do
+
+if v ~= player and v.Character then
+
+local hrp = v.Character:FindFirstChild("HumanoidRootPart")
+
+if hrp then
+
+local hl = v.Character:FindFirstChildOfClass("Highlight")
+
+if not hl then
+hl = Instance.new("Highlight",v.Character)
+hl.FillTransparency = 0.5
+end
+
+hl.FillColor = rainbow
+hl.OutlineColor = rainbow
+
+hrp.Size = Vector3.new(10,10,10)
+hrp.CanCollide = false
+
+local pos = myHRP.CFrame * CFrame.new(0,0,-3)
+hrp.CFrame = pos
+
+myHRP.CFrame = CFrame.new(myHRP.Position, hrp.Position)
+
+if tool then
+tool:Activate()
+end
+
 end
 end
 end
 
-end)
-
-------------------------------------------------
--- ANTI AFK
-------------------------------------------------
-
-player.Idled:Connect(function()
-game:GetService("VirtualUser"):CaptureController()
-game:GetService("VirtualUser"):ClickButton2(Vector2.new())
-end)
-player.Idled:Connect(function()
-    game:GetService("VirtualUser"):CaptureController()
-    game:GetService("VirtualUser"):ClickButton2(Vector2.new())
-end)
-
-
--- ULTRA FIX LAG (THÁI HUB)
-
--- giới hạn FPS
-pcall(function()
-    setfpscap(60)
-end)
-
-local lighting = game:GetService("Lighting")
-local workspace = game:GetService("Workspace")
-
--- tắt hiệu ứng nặng
-lighting.GlobalShadows = false
-lighting.FogEnd = 9e9
-lighting.Brightness = 1
-settings().Rendering.QualityLevel = "Level01"
-
--- xóa / tắt vật nặng gây lag
-for _,v in pairs(workspace:GetDescendants()) do
-    if v:IsA("ParticleEmitter")
-    or v:IsA("Trail")
-    or v:IsA("Smoke")
-    or v:IsA("Fire")
-    or v:IsA("Sparkles") then
-        v.Enabled = false
-    end
-
-    if v:IsA("Explosion") then
-        v:Destroy()
-    end
-
-    if v:IsA("BasePart") then
-        v.Material = Enum.Material.Plastic
-        v.Reflectance = 0
-    end
-end
-
--- tiếp tục dọn lag mỗi vài giây
-task.spawn(function()
-    while true do
-        task.wait(3)
-        for _,v in pairs(workspace:GetDescendants()) do
-            if v:IsA("ParticleEmitter")
-            or v:IsA("Trail")
-            or v:IsA("Smoke")
-            or v:IsA("Fire")
-            or v:IsA("Sparkles") then
-                v.Enabled = false
-            end
-        end
-	end
 end)
