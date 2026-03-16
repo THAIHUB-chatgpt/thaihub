@@ -346,80 +346,19 @@ task.spawn(function()
                 v.Enabled = false
             end
         end
-    end
+	end
 end)
-
--- Silent Assassins Button (for THÁI HUB V2)
-
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local lp = Players.LocalPlayer
-
-local enabled = false
-local hue = 0
-
 local SilentButton = Instance.new("TextButton")
-SilentButton.Size = UDim2.new(0,180,0,35)
-SilentButton.Position = UDim2.new(0,20,0,200)
-SilentButton.BackgroundColor3 = Color3.fromRGB(25,25,25)
+SilentButton.Size = UDim2.new(0,200,0,40)
+SilentButton.Position = UDim2.new(0,230,0,240) -- bên cạnh Rejoin
+SilentButton.BackgroundColor3 = Color3.fromRGB(10,10,10)
 SilentButton.TextColor3 = Color3.fromRGB(255,255,255)
-SilentButton.Text = "Silent Assassins : OFF"
+SilentButton.BorderSizePixel = 1
+SilentButton.Text = "Silent Assassins"
 SilentButton.Parent = MainFrame
 
-SilentButton.MouseButton1Click:Connect(function()
-	enabled = not enabled
-	SilentButton.Text = enabled and "Silent Assassins : ON" or "Silent Assassins : OFF"
-end)
+local UICorner = Instance.new("UICorner")
+UICorner.Parent = SilentButton
 
-RunService.RenderStepped:Connect(function()
-
-	hue += 0.01
-	if hue > 1 then hue = 0 end
-	local rainbow = Color3.fromHSV(hue,1,1)
-
-	local char = lp.Character
-	if not char then return end
-	
-	local myHRP = char:FindFirstChild("HumanoidRootPart")
-	local tool = char:FindFirstChildOfClass("Tool")
-	
-	if not myHRP then return end
-
-	for _,v in pairs(Players:GetPlayers()) do
-		if v ~= lp and v.Character then
-			
-			local hrp = v.Character:FindFirstChild("HumanoidRootPart")
-			if not hrp then continue end
-			
-			-- ESP
-			local hl = v.Character:FindFirstChildOfClass("Highlight")
-			if not hl then
-				hl = Instance.new("Highlight")
-				hl.Parent = v.Character
-				hl.FillTransparency = 0.5
-			end
-			
-			hl.FillColor = rainbow
-			hl.OutlineColor = rainbow
-			
-			-- Hitbox
-			hrp.Size = Vector3.new(10,10,10)
-			hrp.Transparency = 0.5
-			hrp.CanCollide = false
-			
-			if enabled then
 				
-				local pos = myHRP.CFrame * CFrame.new(0,0,-3)
-				hrp.CFrame = pos
 				
-				myHRP.CFrame = CFrame.new(myHRP.Position, hrp.Position)
-				
-				if tool then
-					tool:Activate()
-				end
-				
-			end
-		end
-	end
-
-end)
